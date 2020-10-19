@@ -1,0 +1,1 @@
+To run the application, open the web/yelp_client_ice_cream.html file in a browser.

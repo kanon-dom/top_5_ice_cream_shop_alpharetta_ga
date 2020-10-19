@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lange="en">
+  <head>
+      <meta charset="UTF-8">
+      <title></title>
+      <script src="https://code.jquery.com/jquery-3.2.1.js">
+          crossorigin="anonymous"
+      </script>
+      <script>
+          var token = 'Bearer nZUAF1R1PyDQBUin6bUHJq9b9cV3vswDOh7Bj91F_fjiho33QWuIxBxSD3utnXQVF1763HXdikJwzKnJh6ZtqdZy4RpvzRq2nAQaa3HW2hfXhKU06Fsv5QkOL4qIX3Yx'
+          var yelp_search_url = 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search'
+
+          var requestObj = {
+            url: yelp_search_url,
+            data: {term: 'food', text: 'ice cream', location: 'Alpharetta, GA', sort_by: 'rating', limit: 5},
+            headers: {'Authorization': token},
+            error: function(jqXHR, textStatus, errorThrown){
+              console.log('AJAX error, jqXHR = ', jqXHR, ', textStatus =',
+              textStatus, ', errorThrown = ', errorThrown)
+            }
+          }
+
+          $.ajax(requestObj)
+          .done(function(response){
+            console.log('type of response = ' + typeof response)
+            console.log('response =', response)
+
+           var iceCreamShops = response['businesses'];
+
+            let rowStart = "<tr>";
+            let rowEnd = "</tr>";
+            let columnStrart = "<td>";
+            let columnEnd = "</td>";
+            let headerColumntStart = "<th>";
+            let headerColumnEnd = "</th>";
+            let columnCount = 4;
+            let tablebody = "";
+            let tableHeaderLabels = ['Name', 'Address', 'Person', 'Rating and Rating Count'];
+            let tableHeader = "";
+            for( cindex=0; cindex < tableHeaderLabels.length; cindex++){
+                tableHeader += headerColumntStart + tableHeaderLabels[cindex] + headerColumnEnd;
+            }
+            tableHeader = rowStart + tableHeader + rowEnd ;
+            console.log("Table header=" + tableHeader); console.log("Test");
+
+            let tableBody = "";
+            let tableRow = "";
+            let br = "<br>"
+            let nbsp = "&nbsp;"
+            let rating = "Rating: ";
+            let ratingCount = "Rating Count:";
+            for(lindex=0; lindex < iceCreamShops.length; lindex++){
+                tableRow += rowStart;
+                tableRow += columnStrart + iceCreamShops[lindex]['name'] + columnEnd;
+                tableRow += columnStrart + iceCreamShops[lindex]['location']['address1'] + nbsp + iceCreamShops[lindex]['location']['city'] + columnEnd;
+                tableRow += columnStrart + nbsp + columnEnd;
+                tableRow += columnStrart + rating + nbsp + iceCreamShops[lindex]['rating'] + br + ratingCount + nbsp + iceCreamShops[lindex]['review_count'] + columnEnd;
+                tableRow += rowEnd;
+            }
+             let table = "<H1> Top 5 Ice Cream shops in Alpharetta and around <H2> <br>" + "<table border = 1>" + tableHeader + tableRow +  "</table>";
+             console.log("Table="+ table);
+
+            $("#tableContainer").html(table);
+
+          })
+      </script>
+  </head>
+  <body>
+    <div id = 'tableContainer'> </div>
+  </body>
+
+</html>
